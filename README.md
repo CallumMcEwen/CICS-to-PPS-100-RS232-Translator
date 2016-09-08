@@ -1,8 +1,6 @@
 # CICS-to-PPS-100-RS232-Translator
 Codan CICS to JPS PPS-100 RS232 Command Translator V1.0.0
 
-Codan CICS to JPS PPS-100 translator V1.0.0
-
  This project reads the Codan transceiver frequency information using CICS
  then translates it to JPS PPS-100 serial commands for correct filter selection.
 
