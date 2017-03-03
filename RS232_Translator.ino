@@ -1,6 +1,7 @@
 /*
- 
+
  Codan CICS to JPS PPS-100 translator V1.0.0
+Created by VK5MCA
 
  This project reads the Codan transceiver frequency information using CICS
  then translates it to JPS PPS-100 serial commands for correct filter selection.
@@ -12,7 +13,7 @@
  used to display several things if required e.g PPS status.
 
  Thanks to Ryan Zhang for his help on the Parsing routine.
-  
+
  */
 
 #include <LiquidCrystal.h>
@@ -34,13 +35,13 @@ void setup() {
   Serial1.write(0xE0);        // PPS-100 synchronisation byte
   Serial1.write(pps_unitno);  // PPS-100 unit address byte
   Serial1.write(0x01);        // Place PPS-100 in Bypass mode
-  Serial1.write("\r");        // Carriage Return
+  Serial1.write("\r");
 
   // Show the information screen.
   lcd.clear();
   lcd.write("CICS to PPS-100");
   lcd.setCursor(0,2);
-  lcd.write("VK5FCAM V1.0");
+  lcd.write("VK5MCA V1.0");
   delay(5000);
 
   // Setup the LCD with static text.
@@ -69,24 +70,21 @@ void pps_unbypass() {
   Serial1.write("\r");
 }
 
-// LCD Routines
+// LCD display frequency routine
 void displayFreqs(char* freq) {
   lcd.setCursor(0,1);
   lcd.write(freq);
 }
 
-char * parse_cics_freq(char *message) {   
+// Parse the CICS freq response for display
+char * parse_cics_freq(char *message) {
     char *space = strchr(message, ' ');
     char *dot   = strchr(message, '.');
-
     if (!space || !dot || dot - space < 5)
         return NULL;    // invalid message
-
     if (dot - space == 5)
         *space = '0';   // prepend a zero
-
     *(dot - 1) = '\0';  // terminate the string
-
     return dot - 5;
     }
 
@@ -96,7 +94,7 @@ void loop() {
 
   Serial2.write("freq\r");    // Send CICS command to retrieve Frequency information
   delay (200);                // Give CICS enough time to write all data to serial
-	
+
 	if (Serial2.available()) {
 		char input[INPUT_SIZE + 1];
 		char *output;
@@ -104,15 +102,15 @@ void loop() {
 		input[size] = 0;
 
 		output = parse_cics_freq(input);
-		
+
 		a = output[0] - '0';
 		b = output[1] - '0';
 		c = output[2] - '0';
 		d = output[3] - '0';
 
-		pps_write(a * 16 + b, c * 16 + d);
+		pps_write(a * 16 + b, c * 16 + d); // Write PPS output in Hex
 
 		displayFreqs(output);
-		delay (1000);   // 2 second delay before doing it again
+		delay (1000);   // 1 second delay before doing it again
 	}
 }
