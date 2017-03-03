@@ -1,7 +1,7 @@
 /*
 
- Codan CICS to JPS PPS-100 translator V1.0.0
-Created by VK5MCA
+ Codan CICS to JPS PPS-100 translator V1.0
+ Created by VK5MCA
 
  This project reads the Codan transceiver frequency information using CICS
  then translates it to JPS PPS-100 serial commands for correct filter selection.
